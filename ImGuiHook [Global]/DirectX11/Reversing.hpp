@@ -1,0 +1,168 @@
+#pragma once
+
+#include "Offsets.hpp"
+#include "Structs.hpp"
+#include <wtypes.h>
+#include <cstdint>
+
+namespace Functions
+{
+	namespace UnityEngine 
+	{
+		namespace Time 
+		{
+			float GetTime()
+			{
+				return ((float(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Time::get_time))();
+			}
+
+			float GetDeltaTime()
+			{
+				return ((float(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Time::get_deltaTime))();
+			}
+
+			float GetTimeSinceLevelLoad()
+			{
+				return ((float(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Time::get_timeSinceLevelLoad))();
+			}
+
+			void SetTimescale(float amount)
+			{
+				((void(*)(float))(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Time::set_timeScale))(amount);
+			}
+
+			float GetTimescale()
+			{
+				return ((float(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Time::get_timeScale))();
+			}
+
+			int32_t GetFrameCount()
+			{
+				return ((int32_t(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Time::get_frameCount))();
+			}
+		}
+		namespace RenderSettings 
+		{
+			void SetFog(bool value)
+			{
+				((void(*)(bool))(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::RenderSettings::set_fog))(value);
+			}
+
+			bool GetFog()
+			{
+				return ((bool(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::RenderSettings::get_fog))();
+			}
+		}
+		namespace Application 
+		{
+			void LoadLevel(int32_t index)
+			{
+				((void(*)(int32_t))(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Application::LoadLevel))(index);
+			}
+
+			void SetMaxFPS(int32_t value)
+			{
+				((void(*)(int32_t))(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Application::set_targetFrameRate))(value);
+			}
+
+			int32_t GetMaxFPS()
+			{
+				return ((int32_t(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Application::get_targetFrameRate))();
+			}
+
+			int32_t GetLevelIndex()
+			{
+				return ((int32_t(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Application::get_loadedLevel))();
+			}
+		}
+	}
+	namespace PhotonPlayer
+	{
+		void LoadLevel(int32_t index) // loading it via photon /shrug
+		{
+			((void(*)(int32_t))(ST3::Modules::GameAssembly + ST3::Offsets::PhotonPlayer::LoadLevel))(index);
+		}
+	}
+	namespace PhotonNetwork
+	{
+		bool JoinRandomRoom()
+		{
+			((bool(*)())(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::JoinRandomRoom))();
+			return true;
+		}
+
+		bool Disconnect()
+		{
+			((void(*)())(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::Disconnect))();
+		}
+
+		bool get_inRoom()
+		{
+			return ((bool(*)())(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::get_inRoom))();
+		}
+
+		DWORD* get_player()
+		{
+			return ((DWORD*(*)())(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::get_player))();
+		}
+
+		DWORD* get_room()
+		{
+			return ((DWORD * (*)())(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::get_room))();
+		}
+
+		bool SetMasterClient(DWORD* PhotonPlayer_o)
+		{
+			((bool(*)(DWORD*))(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::SetMasterClient))(PhotonPlayer_o);
+			return true;
+		}
+
+		bool CloseConnection(DWORD* PhotonPlayer_o)
+		{
+			((bool(*)(DWORD*))(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::SetMasterClient))(PhotonPlayer_o);
+			return true;
+		}
+
+		void SetMaxPlayers(DWORD* Room_o, int32_t max)
+		{
+			((void(*)(DWORD*, int32_t))(ST3::Modules::GameAssembly + ST3::Offsets::Room::set_maxPlayers))(Room_o, max);
+		}
+	}
+	namespace Room
+	{
+		void SetVisible(DWORD* Room_o, bool visible)
+		{
+			((void(*)(DWORD*, int32_t))(ST3::Modules::GameAssembly + ST3::Offsets::Room::set_visible))(Room_o, visible);
+		}
+
+		void SetOpen(DWORD* Room_o, bool open)
+		{
+			((void(*)(DWORD*, int32_t))(ST3::Modules::GameAssembly + ST3::Offsets::Room::set_open))(Room_o, open);
+		}
+
+		void SetMaxPlayers(DWORD* Room_o, int32_t max)
+		{
+			((void(*)(DWORD*, int32_t))(ST3::Modules::GameAssembly + ST3::Offsets::Room::set_maxPlayers))(Room_o, max);
+		}
+
+		void SetMasterClientID(DWORD* Room_o, int32_t id)
+		{
+			((void(*)(DWORD*, int32_t))(ST3::Modules::GameAssembly + ST3::Offsets::Room::set_masterClientId))(Room_o, id);
+		}
+
+		bool GetVisible(DWORD* Room_o)
+		{
+			return ((bool(*)(DWORD*))(ST3::Modules::GameAssembly + ST3::Offsets::Room::get_visible))(Room_o);
+		}
+
+		bool GetOpen(DWORD* Room_o)
+		{
+			return ((bool(*)(DWORD*))(ST3::Modules::GameAssembly + ST3::Offsets::Room::get_open))(Room_o);
+		}
+
+		int32_t GetMaxPlayers(DWORD* Room_o)
+		{
+			return ((int32_t(*)(DWORD*))(ST3::Modules::GameAssembly + ST3::Offsets::Room::get_maxPlayers))(Room_o);
+		}
+	}
+}
