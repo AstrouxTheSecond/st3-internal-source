@@ -8,6 +8,7 @@ namespace ST3
 	{
 		uintptr_t ModuleBase;
 		uintptr_t GameAssembly;
+		HMODULE GameAssemblyHandle;
 		uintptr_t UnityPlayer;
 	}
 	namespace Offsets
@@ -153,8 +154,11 @@ namespace ST3
 				uintptr_t get_fogMode = 15671280;
 				uintptr_t get_fogColor = 15671120;
 				uintptr_t set_fogColor = 15671680;
+				uintptr_t set_fogColorInjected = 15671056;
 				uintptr_t get_fogDensity = 15671184;
 				uintptr_t set_fogDensity = 15671744;
+				uintptr_t get_ambientMode = 15670880;
+				uintptr_t set_ambientMode = 15671424;
 			}
 			namespace Camera
 			{

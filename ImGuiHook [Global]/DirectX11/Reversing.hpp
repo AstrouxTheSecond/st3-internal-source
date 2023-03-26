@@ -52,6 +52,17 @@ namespace Functions
 			{
 				return ((bool(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::RenderSettings::get_fog))();
 			}
+
+			void SetAmbientMode(int32_t value)
+			{
+				((void(*)(int32_t))(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::RenderSettings::set_ambientMode))(value);
+			}
+
+			int32_t GetAmbientMode()
+			{
+				return ((int32_t(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::RenderSettings::get_ambientMode))();
+			}
+
 		}
 		namespace Application 
 		{
@@ -91,7 +102,7 @@ namespace Functions
 			return true;
 		}
 
-		bool Disconnect()
+		void Disconnect()
 		{
 			((void(*)())(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::Disconnect))();
 		}

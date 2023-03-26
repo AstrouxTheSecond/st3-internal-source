@@ -58,6 +58,8 @@ namespace Variables
 		const char* Timescale_types[] = { "Button", "Mouse (Mouse4)" };
 		int Timescale_type = 0;
 		ImVec4 Border_color = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
+		bool AntiDisconnect = false;
+		int AmbientMode = 0;
 	}
 }
 

@@ -22,6 +22,12 @@ namespace Hooks
 	void(__fastcall* OnLevelWasLoaded_org)(DWORD*, int32_t, DWORD*);
 	void __stdcall OnLevelWasLoaded(DWORD* __this, int32_t level, DWORD* method);
 
+	bool(__fastcall* LeaveRoom_org)(DWORD*); 
+	bool __stdcall LeaveRoom(DWORD* method);
+
+	void(__fastcall* Disconnect_org)(DWORD*);
+	void __stdcall Disconnect(DWORD* method);
+
 	bool(__fastcall* get_isMasterClient_org)(DWORD*); // PhotonNetwork$$get_isMasterClient
 	bool __stdcall get_isMasterClient(DWORD* method);
 

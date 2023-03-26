@@ -31,6 +31,22 @@ void __stdcall Hooks::OnLevelWasLoaded(DWORD* __this, int32_t level, DWORD* meth
 	return;
 }
 
+bool __stdcall Hooks::LeaveRoom(DWORD* method)
+{
+	if (Variables::Hacks::AntiDisconnect)
+		return false;
+
+	return Hooks::LeaveRoom_org(method);
+}
+
+void __stdcall Hooks::Disconnect(DWORD* method)
+{
+	if (Variables::Hacks::AntiDisconnect)
+		return;
+
+	return Hooks::Disconnect_org(method);
+}
+
 float __stdcall Hooks::get_fieldOfView(DWORD* __this, DWORD* method)
 {
 	if (Variables::Hacks::FOVChanger)
@@ -59,7 +75,7 @@ void __stdcall Hooks::PhotonRPC(DWORD* __this, const char* methodName, int32_t t
 
 		if (std::string("DLAAABADJJP").contains(methodNameReadable) && target == 1)
 			return;
-
+		
 		//if (std::string("JLOHDDECPCL").contains(methodNameReadable)) // RangedAttack Obfuscated 
 			//return;
 	}
@@ -325,8 +341,8 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		//ImGui::ShowStyleEditor();
 		//ImGui::ShowDemoWindow();
 		//ImGui::SetNextWindowPos({0, 0});
-		ImGui::SetNextWindowSize({ 800, 500 });
-		ImGui::Begin("astrohook (2.46)", NULL, ImGuiWindowFlags_NoCollapse);
+		ImGui::SetNextWindowSize({ 800, 600 });
+		ImGui::Begin("Menu", NULL, ImGuiWindowFlags_NoCollapse);
 
 
 		ImGui::SameLine();
@@ -351,6 +367,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					if (Variables::Hacks::FOVChanger)
 						ImGui::SliderFloat("Custom FOV", &Variables::Hacks::FOV, -180.f, 180.f);
 					ImGui::Checkbox("Disable Fog", &Variables::Hacks::FogDisabler);
+					ImGui::SliderInt("Ambient Mode", &Variables::Hacks::AmbientMode, 0.f, 4.f);
 				}
 				break;
 			case 1:
@@ -360,10 +377,11 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					ImGui::Checkbox("Infinite Custard", &Variables::Hacks::INFCustard);
 					ImGui::SameLine();
 					HelpMarker("Quite buggy but it in theory should work.");
-					ImGui::Checkbox("Clientside-Master", &Variables::Hacks::ForceMaster);
-					ImGui::Checkbox("Hat Spoofer", &Variables::Hacks::HatSpoofer);
+					ImGui::Checkbox("Anti-Disconnect", &Variables::Hacks::AntiDisconnect);
 					ImGui::SameLine();
-					HelpMarker("I recommend activating this before you enter the menu to ensure it works.");
+					HelpMarker("Disables server disconnecting. (ghetto antikick)");
+					ImGui::Checkbox("Clientside-Master", &Variables::Hacks::ForceMaster);
+					ImGui::Checkbox("Hat Spoofer (buggy)", &Variables::Hacks::HatSpoofer);
 					if (Variables::Hacks::HatSpoofer)
 					{
 						ImGui::SliderInt("HatID", &Variables::Hacks::HatID, 0, 100);
@@ -404,7 +422,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					{
 						if (Functions::PhotonNetwork::get_inRoom())
 						{
-							ImGui::SliderFloat("Max Players", &Variables::Hacks::FOV, 0.f, 30.f);
+							ImGui::SliderFloat("Max Players", &Variables::Hacks::MaxPlayers, 0.f, 30.f);
 							if (ImGui::Button("Set Max Players"))
 								Functions::Room::SetMaxPlayers(Functions::PhotonNetwork::get_room(), Variables::Hacks::MaxPlayers);
 							if (ImGui::Button("Show Room"))
@@ -412,13 +430,19 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 							if (ImGui::Button("Hide Room"))
 								Functions::Room::SetVisible(Functions::PhotonNetwork::get_room(), false);
 							if (ImGui::Button("Open Room"))
-								Functions::Room::SetVisible(Functions::PhotonNetwork::get_room(), true);
+								Functions::Room::SetOpen(Functions::PhotonNetwork::get_room(), true);
 							if (ImGui::Button("Close Room"))
-								Functions::Room::SetVisible(Functions::PhotonNetwork::get_room(), false);
+								Functions::Room::SetOpen(Functions::PhotonNetwork::get_room(), false);
 							if (ImGui::Button("Crash Server (SetMasterClient)"))
+							{
+								Variables::Hacks::AntiDisconnect = false;
 								Functions::PhotonNetwork::SetMasterClient(Functions::PhotonNetwork::get_player());
+							}
 							if (ImGui::Button("Crash Server #2 (CloseConnection)"))
+							{
+								Variables::Hacks::AntiDisconnect = false;
 								Functions::PhotonNetwork::CloseConnection(Functions::PhotonNetwork::get_player());
+							}
 						}
 						else
 						{
@@ -502,6 +526,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	}
 
 	Functions::UnityEngine::RenderSettings::SetFog(!Variables::Hacks::FogDisabler);
+	Functions::UnityEngine::RenderSettings::SetAmbientMode(Variables::Hacks::AmbientMode);
 	//Functions::UnityEngine::Application::SetMaxFPS(10000);
 
 	ImGuiStyle* style = &ImGui::GetStyle();
@@ -520,6 +545,7 @@ DWORD WINAPI MainThread(LPVOID lpParameter)
 {
 	ST3::Modules::ModuleBase = (uintptr_t)GetModuleHandle(NULL);
 	ST3::Modules::GameAssembly = (uintptr_t)GetModuleHandle("GameAssembly.dll");
+	ST3::Modules::GameAssemblyHandle = GetModuleHandle("GameAssembly.dll");
 	ST3::Modules::UnityPlayer = (uintptr_t)GetModuleHandle("UnityPlayer.dll");
 
 	bool WindowFocus = false;
@@ -566,7 +592,9 @@ DWORD WINAPI MainThread(LPVOID lpParameter)
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::AntiCheat::OnInjectionDetected), &Hooks::OnInjectionDetected, (LPVOID*)&Hooks::OnInjectionDetected_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::AntiCheat::OnObscuredCheatingDetected), &Hooks::OnObscuredCheatingDetected, (LPVOID*)&Hooks::OnObscuredCheatingDetected_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::AntiCheat::OnLevelWasLoaded), &Hooks::OnLevelWasLoaded, (LPVOID*)&Hooks::OnLevelWasLoaded_org);
-	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::RoomMultiplayerMenu::KickPlayerMaster), &Hooks::KickPlayerMaster, (LPVOID*)&Hooks::KickPlayerMaster_org);
+	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::Disconnect), &Hooks::Disconnect, (LPVOID*)&Hooks::Disconnect_org);
+	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::LeaveRoom), &Hooks::LeaveRoom, (LPVOID*)&Hooks::LeaveRoom_org);
+	//MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::RoomMultiplayerMenu::KickPlayerMaster), &Hooks::KickPlayerMaster, (LPVOID*)&Hooks::KickPlayerMaster_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::get_isMasterClient), &Hooks::get_isMasterClient, (LPVOID*)&Hooks::get_isMasterClient_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::PhotonView::RPC), &Hooks::PhotonRPC, (LPVOID*)&Hooks::PhotonRPC_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::CodeStage::SetInt), &Hooks::SetInt, (LPVOID*)&Hooks::SetInt_org);

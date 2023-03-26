@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>E:\ImGuiHook\Build\astrohook (x64).dll</FullPath>
+      <FullPath>E:\ImGuiHook\st3-internal-source\Build\astrohook (x64).dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
