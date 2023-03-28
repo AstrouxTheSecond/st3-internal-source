@@ -27,7 +27,7 @@ namespace Variables
 	namespace Hacks
 	{
 		bool FOVChanger = false;
-		float FOV = 120.f;
+		int FOV = 100.f;
 		bool NoFog = false;
 		bool INFToast = false;
 		bool INFCustard = false;
@@ -37,16 +37,16 @@ namespace Variables
 		bool RPCDisabler = false;
 		bool AttackDisabler = false;
 		bool AntiNewbornGrenade = false;
-		bool Watermark = true;
+		bool Watermark = false;
 		bool FogDisabler = false;
-		ImVec4 Watermark_color = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+		ImVec4 Watermark_color = ImVec4(1.00f, 0.f, 0.f, 1.00f);
 		bool Crosshair = false;
-		ImVec4 Crosshair_color = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+		ImVec4 Crosshair_color = ImVec4(1.00f, 0.f, 0.f, 1.00f);
 		const char* Crosshair_types[] = { "Circle", "Square" };
 		int Crosshair_type = 0;
-		float Crosshair_segments = 100.f;
-		float Crosshair_rounding = 1.f;
-		float TimescaleAmount = 4.f;
+		int Crosshair_segments = 100.f;
+		int Crosshair_rounding = 1.f;
+		int TimescaleAmount = 4.f;
 		int32_t LevelID = 1;
 		bool DebugMenu = false;
 		bool ServerRegionSpoofer = false;
@@ -54,12 +54,17 @@ namespace Variables
 		bool LoadLevelServerside = false;
 		bool ForceMaster = false;
 		char ScriptInput[1024]; // unused
-		float MaxPlayers = 6;
+		int MaxPlayers = 6;
 		const char* Timescale_types[] = { "Button", "Mouse (Mouse4)" };
 		int Timescale_type = 0;
-		ImVec4 Border_color = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
 		bool AntiDisconnect = false;
-		int AmbientMode = 0;
+		int32_t AmbientMode = 0;
+		int32_t QualityLevel = 0;
+	}
+	namespace Fonts
+	{
+		ImFont* font_1;
+		ImFont* font_2;
 	}
 }
 

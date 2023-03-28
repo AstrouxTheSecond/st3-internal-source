@@ -1,8 +1,13 @@
 #pragma once
 
-struct Color_Fields {
-	float r;
-	float g;
-	float b;
-	float a;
+// dumpil2cpp.h
+
+struct UnityEngine_Vector3_Fields {
+	float x;
+	float y;
+	float z;
+};
+
+struct UnityEngine_Vector3_o {
+	UnityEngine_Vector3_Fields fields;
 };

@@ -4,6 +4,7 @@
 
 bool ShowMenu = false;
 bool ImGui_Initialised = false;
+
 int switchTabs = 0;
 
 void __stdcall Hooks::CheckCheatEngine(DWORD* __this, DWORD* method)
@@ -41,7 +42,7 @@ bool __stdcall Hooks::LeaveRoom(DWORD* method)
 
 void __stdcall Hooks::Disconnect(DWORD* method)
 {
-	if (Variables::Hacks::AntiDisconnect)
+	if (Variables::Hacks::AntiDisconnect && Functions::UnityEngine::Application::GetLevelIndex() > 1)
 		return;
 
 	return Hooks::Disconnect_org(method);
@@ -179,12 +180,6 @@ bool __stdcall Hooks::get_isMasterClient(DWORD* method)
 	return Hooks::get_isMasterClient_org(method);
 }
 
-void __stdcall Hooks::KickPlayerMaster(DWORD* __this, DWORD* player, DWORD* method)
-{
-	return;
-	//return Hooks::LeaveRoom2_org(__this, player, method);
-}
-
 static void HelpMarker(const char* desc)
 {
 	ImGui::TextDisabled(" (?)");
@@ -252,55 +247,77 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui::GetIO().ImeWindowHandle = Process::Hwnd;
 			Process::WndProc = (WNDPROC)SetWindowLongPtr(Process::Hwnd, GWLP_WNDPROC, (__int3264)(LONG_PTR)WndProc);
 
-			ImGuiStyle* style = &ImGui::GetStyle();
+			auto& style = ImGui::GetStyle();
+			io.IniFilename = "inferno_imgui.ini";
 
-			style->WindowPadding = ImVec2(15, 15);
-			style->WindowRounding = 5.0f;
-			style->FramePadding = ImVec2(5, 5);
-			style->FrameRounding = 4.0f;
-			style->ItemSpacing = ImVec2(12, 8);
-			style->ItemInnerSpacing = ImVec2(8, 6);
-			style->IndentSpacing = 25.0f;
-			style->ScrollbarSize = 15.0f;
-			style->ScrollbarRounding = 9.0f;
-			style->GrabMinSize = 5.0f;
-			style->GrabRounding = 3.0f;
+			//Variables::Fonts::font_1 = ImGui::GetIO().Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\verdana.ttf", 15.0f, NULL, ImGui::GetIO().Fonts->GetGlyphRangesCyrillic());
+			//Variables::Fonts::font_2 = ImGui::GetIO().Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\verdana.ttf", 62.0f, NULL, ImGui::GetIO().Fonts->GetGlyphRangesCyrillic());
 
-			style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
-			style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-			style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-			style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-			style->Colors[ImGuiCol_Border] = Variables::Hacks::Border_color;
-			style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
-			style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-			style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-			style->Colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 0.98f, 0.95f, 0.75f);
-			style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-			style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-			style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-			style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-			style->Colors[ImGuiCol_CheckMark] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-			style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-			style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-			style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-			style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-			style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-			style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-			style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-			style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-			style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-			style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-			style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
-			style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-			style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
-			style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
+			static int hue = 140;
 
+			ImVec4 col_text = ImColor::HSV(hue / 255.f, 20.f / 255.f, 235.f / 255.f);
+			ImVec4 col_main = ImColor(9, 82, 128);
+			ImVec4 col_back = ImColor(31, 44, 54);
+			ImVec4 col_area = ImColor(4, 32, 41);
+
+			style.Colors[ImGuiCol_Text] = ImVec4(0.98f, 0.98f, 0.98f, 1.00f);
+			style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.30f, 0.30f, 0.30f, 1.00f);
+			style.Colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.1f, 0.1f, 0.95f);
+			style.Colors[ImGuiCol_Border] = ImVec4(0.27f, 0.27f, .27f, 1.00f);
+			style.Colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+			style.Colors[ImGuiCol_FrameBg] = ImVec4(0.09f, .09f, .09f, 1.f);
+			style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.13, 0.13, 0.13, 1.f);
+			style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.11, 0.11, 0.11, 1.f);
+			style.Colors[ImGuiCol_TitleBg] = ImVec4(.78f, 0.f, 0.f, .7f);
+			style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(.78f, 0.f, 0.f, .7f);
+			style.Colors[ImGuiCol_TitleBgActive] = ImVec4(.78f, 0.f, 0.f, .7f);
+			style.Colors[ImGuiCol_MenuBarBg] = ImVec4(.78f, 0.f, 0.f, .7f);
+			style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.1f, 0.1f, 0.1f, 0.95f);
+			style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(.78f, 0.f, 0.f, 1.f);
+			style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(.78f, 0.f, 0.f, 1.f);
+			style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(.78f, 0.f, 0.f, 1.f);
+			style.Colors[ImGuiCol_CheckMark] = ImVec4(.78f, 0.f, 0.f, 1.f);
+			style.Colors[ImGuiCol_SliderGrab] = ImVec4(.78f, 0.f, 0.f, 1.f);
+			style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(.78f, 0.f, 0.f, 1.f);
+			style.Colors[ImGuiCol_Button] = ImVec4(0.12, 0.12, 0.12, 1.f);
+			style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.21f, 0.21f, 0.21f, 1.00f);
+			style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.12, 0.12, 0.12, 1.f);
+			style.Colors[ImGuiCol_Header] = ImVec4(.78f, 0.f, 0.f, .7f);
+			style.Colors[ImGuiCol_HeaderHovered] = ImVec4(.78f, 0.f, 0.f, .8f);
+			style.Colors[ImGuiCol_HeaderActive] = ImVec4(.78f, 0.f, 0.f, .87f);
+			style.Colors[ImGuiCol_ResizeGrip] = ImVec4(col_main.x, col_main.y, col_main.z, 0.20f);
+			style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 0.78f);
+			style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+			style.Colors[ImGuiCol_PlotLines] = ImVec4(col_text.x, col_text.y, col_text.z, 0.63f);
+			style.Colors[ImGuiCol_PlotLinesHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+			style.Colors[ImGuiCol_PlotHistogram] = ImVec4(col_text.x, col_text.y, col_text.z, 0.63f);
+			style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+			style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(col_main.x, col_main.y, col_main.z, 0.43f);
+			style.Colors[ImGuiCol_PopupBg] = ImVec4(0.78f, 0.00f, 0.00f, 0.70f);
+
+			//style.Alpha = 0.0f;
+			style.WindowPadding = ImVec2(8, 8);
+			style.WindowMinSize = ImVec2(32, 32);
+			style.WindowRounding = 0.5f;
+			style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
+			style.FramePadding = ImVec2(4, 2);
+			style.FrameRounding = 0.0f;
+			style.ItemSpacing = ImVec2(8, 4);
+			style.ItemInnerSpacing = ImVec2(4, 4);
+			style.TouchExtraPadding = ImVec2(0, 0);
+			style.IndentSpacing = 21.0f;
+			style.ColumnsMinSpacing = 3.0f;
+			style.ScrollbarSize = 12.0f;
+			style.ScrollbarRounding = 0.0f;
+			style.GrabMinSize = 0.1f;
+			style.GrabRounding = 0.0f;
+			style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
+			style.DisplayWindowPadding = ImVec2(22, 22);
+			style.DisplaySafeAreaPadding = ImVec2(4, 4);
+			style.AntiAliasedLines = true;
+			style.CurveTessellationTol = 1.25f;
+
+			//Variables::Hacks::QualityLevel = Functions::UnityEngine::QualitySettings::GetQualityLevel(); - PERFORMANCE/UNUSED
 			ImGui_Initialised = true;
 		}
 	}
@@ -314,8 +331,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	{
 		//ImGui::SetNextWindowSize({ 200, 100 });
 		ImGui::Begin("Status Menu", NULL, (ImGuiWindowFlags_NoCollapse, ImGuiWindowFlags_NoTitleBar));
-		ImGui::Text("Application Info:");
-		ImGui::Text("FPS %0f", ImGui::GetIO().Framerate);
+		ImGui::Text("FPS %.0f", ImGui::GetIO().Framerate);
 		ImGui::Text("GetMaxFPS = %i", Functions::UnityEngine::Application::GetMaxFPS());
 		ImGui::Text("GetLevelIndex = %i", Functions::UnityEngine::Application::GetLevelIndex());
 		ImGui::Separator();
@@ -336,173 +352,159 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::End();
 	}
 
-	if (ShowMenu == true)
+	if (ShowMenu == true && Functions::UnityEngine::Application::GetLevelIndex() > 0)
 	{
-		//ImGui::ShowStyleEditor();
-		//ImGui::ShowDemoWindow();
-		//ImGui::SetNextWindowPos({0, 0});
-		ImGui::SetNextWindowSize({ 800, 600 });
-		ImGui::Begin("Menu", NULL, ImGuiWindowFlags_NoCollapse);
-
+		ImGui::SetNextWindowSize({ 800, 550 });
+		//ImGui::PushFont(Variables::Fonts::font_2);
+		ImGui::Begin("Inferno.cc", NULL, ImGuiWindowFlags_NoCollapse);
 
 		ImGui::SameLine();
-		if (ImGui::Button("   Visuals   "))
+		if (ImGui::Button("Visuals", ImVec2(150, 25)))
 			switchTabs = 0;
 
 		ImGui::SameLine();
-		if (ImGui::Button("   Misc   "))
+		if (ImGui::Button("Misc", ImVec2(150, 25)))
 			switchTabs = 1;
 
-		//ImGui::SameLine();
-		//if (ImGui::Button("   Scripting   "))
-		//	switchTabs = 2;
+		if (Functions::PhotonNetwork::get_inRoom())
+		{
+			ImGui::SameLine();
+			if (ImGui::Button("Room Settings", ImVec2(150, 25)))
+				switchTabs = 2;
+		}
 
-		if (Functions::UnityEngine::Application::GetLevelIndex() > 0)
-		{
-			switch (switchTabs) {
-			case 0:
-				if (ImGui::CollapsingHeader("World"))
-				{
-					ImGui::Checkbox("FOV Changer", &Variables::Hacks::FOVChanger);
-					if (Variables::Hacks::FOVChanger)
-						ImGui::SliderFloat("Custom FOV", &Variables::Hacks::FOV, -180.f, 180.f);
-					ImGui::Checkbox("Disable Fog", &Variables::Hacks::FogDisabler);
-					ImGui::SliderInt("Ambient Mode", &Variables::Hacks::AmbientMode, 0.f, 4.f);
-				}
-				break;
-			case 1:
-				if (ImGui::CollapsingHeader("General"))
-				{
-					ImGui::Checkbox("Infinite Toast", &Variables::Hacks::INFToast);
-					ImGui::Checkbox("Infinite Custard", &Variables::Hacks::INFCustard);
-					ImGui::SameLine();
-					HelpMarker("Quite buggy but it in theory should work.");
-					ImGui::Checkbox("Anti-Disconnect", &Variables::Hacks::AntiDisconnect);
-					ImGui::SameLine();
-					HelpMarker("Disables server disconnecting. (ghetto antikick)");
-					ImGui::Checkbox("Clientside-Master", &Variables::Hacks::ForceMaster);
-					ImGui::Checkbox("Hat Spoofer (buggy)", &Variables::Hacks::HatSpoofer);
-					if (Variables::Hacks::HatSpoofer)
-					{
-						ImGui::SliderInt("HatID", &Variables::Hacks::HatID, 0, 100);
-						ImGui::SliderInt("HatList", &Variables::Hacks::HatList, 0, 100);
-					}
-					//ImGui::Separator();
-					//ImGui::Checkbox("Server Region Spoofer", &Variables::Hacks::ServerRegionSpoofer);
-					//ImGui::SameLine();
-					//HelpMarker("Spoofs the server region.");
-					//if (Variables::Hacks::ServerRegionSpoofer)       ----------- ITS PATCHED!!!!!!!!!!!!!!!!!!!!!!!
-					//{
-					//	ImGui::SliderInt("Region", &Variables::Hacks::ServerRegion, -1, 10);
-					//} 
-					ImGui::Separator();
-					ImGui::SliderFloat("Timescale Amount", &Variables::Hacks::TimescaleAmount, 0.f, 20.f);
-					ImGui::Combo("Timescale Type", &Variables::Hacks::Timescale_type, Variables::Hacks::Timescale_types, IM_ARRAYSIZE(Variables::Hacks::Timescale_types));
-					if (Variables::Hacks::Timescale_type == 0)
-						if (ImGui::Button("Set Timescale"))
-							Functions::UnityEngine::Time::SetTimescale(Variables::Hacks::TimescaleAmount);
-					ImGui::Separator();
-					ImGui::SliderInt("Level ID", &Variables::Hacks::LevelID, 0, 42);
-					ImGui::SameLine();
-					HelpMarker("11 = Blue Room");
-					if (ImGui::Button("Load Level"))
-					{
-						ShowMenu = false;
-						if (!Variables::Hacks::LoadLevelServerside)
-							Functions::UnityEngine::Application::LoadLevel(Variables::Hacks::LevelID);
-						else
-							Functions::PhotonPlayer::LoadLevel(Variables::Hacks::LevelID);
-					}
-					ImGui::Checkbox("Load Via Photon", &Variables::Hacks::LoadLevelServerside);
-					ImGui::SameLine();
-					HelpMarker("Loads the level via Photon. (useless for now ig)");
-					if (ImGui::Button("Join Random Room (use on serverlist)"))
-						Functions::PhotonNetwork::JoinRandomRoom();
-					if (ImGui::CollapsingHeader("Room Options"))
-					{
-						if (Functions::PhotonNetwork::get_inRoom())
-						{
-							ImGui::SliderFloat("Max Players", &Variables::Hacks::MaxPlayers, 0.f, 30.f);
-							if (ImGui::Button("Set Max Players"))
-								Functions::Room::SetMaxPlayers(Functions::PhotonNetwork::get_room(), Variables::Hacks::MaxPlayers);
-							if (ImGui::Button("Show Room"))
-								Functions::Room::SetVisible(Functions::PhotonNetwork::get_room(), true);
-							if (ImGui::Button("Hide Room"))
-								Functions::Room::SetVisible(Functions::PhotonNetwork::get_room(), false);
-							if (ImGui::Button("Open Room"))
-								Functions::Room::SetOpen(Functions::PhotonNetwork::get_room(), true);
-							if (ImGui::Button("Close Room"))
-								Functions::Room::SetOpen(Functions::PhotonNetwork::get_room(), false);
-							if (ImGui::Button("Crash Server (SetMasterClient)"))
-							{
-								Variables::Hacks::AntiDisconnect = false;
-								Functions::PhotonNetwork::SetMasterClient(Functions::PhotonNetwork::get_player());
-							}
-							if (ImGui::Button("Crash Server #2 (CloseConnection)"))
-							{
-								Variables::Hacks::AntiDisconnect = false;
-								Functions::PhotonNetwork::CloseConnection(Functions::PhotonNetwork::get_player());
-							}
-						}
-						else
-						{
-							ImGui::Text("Consider joining a room...");
-						}
-					}
-				}
-				if (ImGui::CollapsingHeader("Other"))
-				{
-					ImGui::Checkbox("Disable Photon RPC", &Variables::Hacks::RPCDisabler);
-					ImGui::SameLine();
-					HelpMarker("This only disables one of the RPC functions ill add them all later.");
-					ImGui::Checkbox("Debug Menu", &Variables::Hacks::DebugMenu);
-					ImGui::ColorEdit4("Menu Border Color##1", (float*)&Variables::Hacks::Border_color);
-					ImGui::Checkbox("Watermark", &Variables::Hacks::Watermark);
-					ImGui::SameLine();
-					ImGui::ColorEdit4("Watermark Color##1", (float*)&Variables::Hacks::Watermark_color);
-					ImGui::Checkbox("Crosshair ", &Variables::Hacks::Crosshair);
-					ImGui::SameLine();
-					ImGui::ColorEdit4("Crosshair Color##1", (float*)&Variables::Hacks::Crosshair_color);
-					ImGui::Combo("Crosshair Type", &Variables::Hacks::Crosshair_type, Variables::Hacks::Crosshair_types, IM_ARRAYSIZE(Variables::Hacks::Crosshair_types));
-					if (Variables::Hacks::Crosshair_type == 0)
-						ImGui::SliderFloat("Circle Segments", &Variables::Hacks::Crosshair_segments, 1.f, 100.f);
-					else
-						ImGui::SliderFloat("Square Rounding", &Variables::Hacks::Crosshair_rounding, 0.f, 12.f);
-				}
-				if (ImGui::CollapsingHeader("Credits"))
-				{
-					ImGui::Text("Created by: Astroux#4200");
-					ImGui::Text("This cheat is extremely unstable, it will probably crash a couple times.");
-				}
-				break;
-				//case 2:
-				//	if (ImGui::CollapsingHeader("LUA"))
-				//	{
-				//		ImGui::InputTextMultiline("LUA Input", Variables::Hacks::ScriptInput, IM_ARRAYSIZE(Variables::Hacks::ScriptInput));
-				//		if (ImGui::Button("Compile & Execute"))
-				//		{
-				//			PyRun_SimpleString(Variables::Hacks::ScriptInput);
-				//		}
-				//	}
-				//	break;
+		//ImGui::PopFont();
+		//ImGui::PushFont(Variables::Fonts::font_1);
+
+		switch (switchTabs) {
+		case 0:
+			if (ImGui::CollapsingHeader("World"))
+			{
+				ImGui::Checkbox("FOV Changer", &Variables::Hacks::FOVChanger);
+				if (Variables::Hacks::FOVChanger)
+					ImGui::SliderInt("Custom FOV", &Variables::Hacks::FOV, -180.f, 180.f);
+				ImGui::Checkbox("Disable Fog", &Variables::Hacks::FogDisabler);
+				ImGui::SliderInt("Ambient Mode", &Variables::Hacks::AmbientMode, 0.f, 1.f);
+				//ImGui::SliderInt("Quality Level", &Variables::Hacks::QualityLevel, 0.f, 6.f);
+				//ImGui::SameLine();
+				//if (ImGui::Button("Set Quality Level"))
+				//	Functions::UnityEngine::QualitySettings::SetQualityLevel(Variables::Hacks::QualityLevel);
 			}
-			ImGui::End();
+			if (ImGui::CollapsingHeader("Other"))
+			{
+				ImGui::Checkbox("Crosshair ", &Variables::Hacks::Crosshair);
+				ImGui::SameLine();
+				ImGui::ColorEdit4("Crosshair Color##1", (float*)&Variables::Hacks::Crosshair_color);
+				ImGui::Combo("Crosshair Type", &Variables::Hacks::Crosshair_type, Variables::Hacks::Crosshair_types, IM_ARRAYSIZE(Variables::Hacks::Crosshair_types));
+				if (Variables::Hacks::Crosshair_type == 0)
+					ImGui::SliderInt("Circle Segments", &Variables::Hacks::Crosshair_segments, 1.f, 10.f);
+				else
+					ImGui::SliderInt("Square Rounding", &Variables::Hacks::Crosshair_rounding, 0.f, 12.f);
+			}
+			break;
+		case 1:
+			if (ImGui::CollapsingHeader("General"))
+			{
+				ImGui::Checkbox("Infinite Toast", &Variables::Hacks::INFToast);
+				ImGui::Checkbox("Infinite Custard", &Variables::Hacks::INFCustard);
+				ImGui::SameLine();
+				HelpMarker("Quite buggy but it in theory should work.");
+				ImGui::Checkbox("Anti-Disconnect", &Variables::Hacks::AntiDisconnect);
+				ImGui::SameLine();
+				HelpMarker("Disables server disconnecting/leaving. (ghetto antikick)");
+				ImGui::Checkbox("Clientside-Master", &Variables::Hacks::ForceMaster);
+				ImGui::Checkbox("Hat Spoofer (buggy)", &Variables::Hacks::HatSpoofer);
+				if (Variables::Hacks::HatSpoofer)
+				{
+					ImGui::SliderInt("HatID", &Variables::Hacks::HatID, 0, 100);
+					ImGui::SliderInt("HatList", &Variables::Hacks::HatList, 0, 100);
+				}
+				ImGui::Separator();
+				ImGui::Checkbox("Server Region Spoofer", &Variables::Hacks::ServerRegionSpoofer);
+				ImGui::SameLine();
+				HelpMarker("Spoofs the server region.");
+				if (Variables::Hacks::ServerRegionSpoofer)       // it might of been the server bug that made me think it was patched /shrug
+				{
+					ImGui::SliderInt("Region", &Variables::Hacks::ServerRegion, 0, 10);
+				} 
+				ImGui::Separator();
+				//ImGui::SliderFloat("Timescale Amount", &Variables::Hacks::TimescaleAmount, 0.f, 20.f);
+				ImGui::SliderInt("Timescale Amount", &Variables::Hacks::TimescaleAmount, 0.f, 20.f);
+				ImGui::Combo("Timescale Type", &Variables::Hacks::Timescale_type, Variables::Hacks::Timescale_types, IM_ARRAYSIZE(Variables::Hacks::Timescale_types));
+				if (Variables::Hacks::Timescale_type == 0)
+					if (ImGui::Button("Set Timescale"))
+						Functions::UnityEngine::Time::SetTimescale(Variables::Hacks::TimescaleAmount);
+				ImGui::Separator();
+				ImGui::SliderInt("Level ID", &Variables::Hacks::LevelID, 0, 42);
+				ImGui::SameLine();
+				HelpMarker("11 = Blue Room");
+				if (ImGui::Button("Load Level"))
+				{
+					ShowMenu = false;
+					if (!Variables::Hacks::LoadLevelServerside)
+						Functions::UnityEngine::Application::LoadLevel(Variables::Hacks::LevelID);
+					else
+						Functions::PhotonPlayer::LoadLevel(Variables::Hacks::LevelID);
+				}
+				ImGui::Checkbox("Load Via Photon", &Variables::Hacks::LoadLevelServerside);
+				ImGui::SameLine();
+				HelpMarker("Loads the level via Photon. (useless for now ig)");
+				if (ImGui::Button("Join Random Room (use on serverlist)"))
+					Functions::PhotonNetwork::JoinRandomRoom();
+			}
+			if (ImGui::CollapsingHeader("Other"))
+			{
+				ImGui::Checkbox("Disable Photon RPC", &Variables::Hacks::RPCDisabler);
+				ImGui::SameLine();
+				HelpMarker("This only disables one of the RPC functions ill add them all later.");
+				ImGui::Checkbox("Debug Menu", &Variables::Hacks::DebugMenu);
+				ImGui::Checkbox("Watermark", &Variables::Hacks::Watermark);
+				ImGui::SameLine();
+				ImGui::ColorEdit4("Watermark Color##1", (float*)&Variables::Hacks::Watermark_color);
+			}
+			if (ImGui::CollapsingHeader("Credits"))
+			{
+				ImGui::Text("Created by: Astroux#4200");
+				ImGui::Text("This cheat is extremely unstable, it will probably crash a couple times.");
+			}
+			break;
+		case 2:
+			//ImGui::SliderFloat("Max Players", &Variables::Hacks::MaxPlayers, 0.f, 30.f);
+			ImGui::SliderInt("Max Players", &Variables::Hacks::MaxPlayers, 0.f, 12.f);
+			if (ImGui::Button("Set Max Players"))
+				Functions::Room::SetMaxPlayers(Functions::PhotonNetwork::get_room(), Variables::Hacks::MaxPlayers);
+			if (ImGui::Button("Show Room"))
+				Functions::Room::SetVisible(Functions::PhotonNetwork::get_room(), true);
+			if (ImGui::Button("Hide Room"))
+				Functions::Room::SetVisible(Functions::PhotonNetwork::get_room(), false);
+			if (ImGui::Button("Open Room"))
+				Functions::Room::SetOpen(Functions::PhotonNetwork::get_room(), true);
+			if (ImGui::Button("Close Room"))
+				Functions::Room::SetOpen(Functions::PhotonNetwork::get_room(), false);
+			if (ImGui::Button("Crash Server (SetMasterClient)"))
+			{
+				Variables::Hacks::AntiDisconnect = false;
+				Functions::PhotonNetwork::SetMasterClient(Functions::PhotonNetwork::get_player());
+			}
+			if (ImGui::Button("Crash Server #2 (CloseConnection)"))
+			{
+				Variables::Hacks::AntiDisconnect = false;
+				Functions::PhotonNetwork::CloseConnection(Functions::PhotonNetwork::get_player());
+			}
+			break;
 		}
-		else
-		{
-			ImGui::Text("Click 'Play' before you config the cheat.");
-		}
+		//ImGui::PopFont();
+		ImGui::End();
 	}
 
 	auto draw_list = ImGui::GetBackgroundDrawList();
 	auto yOffset = 0;
 
-	if (Variables::Hacks::Watermark)
+	if (Variables::Hacks::Watermark && Functions::UnityEngine::Application::GetLevelIndex() > 0)
 	{
-		draw_list->AddRectFilled(ImVec2(6, 4 + yOffset), ImVec2((4 * 2) + ImGui::CalcTextSize("astrohook - Astroux#4200").x + 6, 6 + yOffset), ImGui::GetColorU32(Variables::Hacks::Watermark_color));
-		draw_list->AddRectFilled(ImVec2(6, 6 + yOffset), ImVec2((4 * 2) + ImGui::CalcTextSize("astrohook - Astroux#4200").x + 6, 25 + yOffset), ImColor(0.2117647081613541f, 0.2235294133424759f, 0.2470588237047195f, 0.3f));
-		draw_list->AddText(ImVec2(10, 8 + yOffset), ImColor(255, 255, 255, 255), "astrohook - Astroux#4200");
-		draw_list->AddText(ImVec2(Process::WindowWidth, Process::WindowHeight), ImColor(255, 255, 255, 255), "astrohook - Astroux#4200");
+		draw_list->AddRectFilled(ImVec2(6, 4), ImVec2((4 * 2) + ImGui::CalcTextSize("Inferno.cc").x + 6, 6), ImGui::GetColorU32(Variables::Hacks::Watermark_color));
+		draw_list->AddRectFilled(ImVec2(6, 6), ImVec2((4 * 2) + ImGui::CalcTextSize("Inferno.cc").x + 6, 25), ImColor(0.2117647081613541f, 0.2235294133424759f, 0.2470588237047195f, 0.3f));
+		draw_list->AddText(ImVec2(10, 8), ImColor(255, 255, 255, 255), "Inferno.cc");
 	}
 
 	if (Variables::Hacks::Crosshair)
@@ -517,6 +519,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		}
 	}
 
+	if (Functions::UnityEngine::Application::GetLevelIndex() == 0)
+		draw_list->AddText(ImVec2(10, 8), ImColor(255, 255, 255, 255), "Cheat Loaded, Click 'Play'");
+
 	if (Variables::Hacks::Timescale_type == 1)
 	{
 		if (GetAsyncKeyState(VK_XBUTTON2))
@@ -530,7 +535,6 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	//Functions::UnityEngine::Application::SetMaxFPS(10000);
 
 	ImGuiStyle* style = &ImGui::GetStyle();
-	style->Colors[ImGuiCol_Border] = Variables::Hacks::Border_color;
 
 	ImGui::EndFrame();
 	ImGui::Render();
@@ -594,7 +598,6 @@ DWORD WINAPI MainThread(LPVOID lpParameter)
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::AntiCheat::OnLevelWasLoaded), &Hooks::OnLevelWasLoaded, (LPVOID*)&Hooks::OnLevelWasLoaded_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::Disconnect), &Hooks::Disconnect, (LPVOID*)&Hooks::Disconnect_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::LeaveRoom), &Hooks::LeaveRoom, (LPVOID*)&Hooks::LeaveRoom_org);
-	//MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::RoomMultiplayerMenu::KickPlayerMaster), &Hooks::KickPlayerMaster, (LPVOID*)&Hooks::KickPlayerMaster_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::get_isMasterClient), &Hooks::get_isMasterClient, (LPVOID*)&Hooks::get_isMasterClient_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::PhotonView::RPC), &Hooks::PhotonRPC, (LPVOID*)&Hooks::PhotonRPC_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::CodeStage::SetInt), &Hooks::SetInt, (LPVOID*)&Hooks::SetInt_org);

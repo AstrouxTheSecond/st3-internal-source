@@ -143,8 +143,39 @@ namespace ST3
 				uintptr_t enableGravity = 0x58;
 			}
 		}
+		namespace WeaponAnimation
+		{
+			uintptr_t Update = 24924528;
+		}
+		namespace WeaponCrosshair
+		{
+			uintptr_t Update = 25002816;
+		}
+		namespace WeaponSync
+		{
+			uintptr_t syncShotgun = 23608496;
+		}
 		namespace UnityEngine
 		{
+			namespace Screen
+			{
+				uintptr_t get_width = 15504912;
+				uintptr_t get_height = 15504784;
+				uintptr_t get_dpi = 15504688;
+				uintptr_t get_fullScreenMode = 15504736;
+				uintptr_t set_fullScreenMode = 15504960;
+				uintptr_t SetResolution = 15504464;
+				uintptr_t get_lockCursor = 15504832;
+				uintptr_t set_lockCursor = 15505024;
+			}
+			namespace QualitySettings
+			{
+				uintptr_t GetQualityLevel = 15646880;
+				uintptr_t SetQualityLevel = 15646928;
+				uintptr_t set_shadowDistance = 15647648;
+				uintptr_t get_anisotropicFiltering = 15647104;
+				uintptr_t set_anisotropicFiltering = 15647392;
+			}
 			namespace RenderSettings
 			{
 				uintptr_t set_fog = 15671808;
@@ -162,6 +193,8 @@ namespace ST3
 			}
 			namespace Camera
 			{
+				uintptr_t get_main = 15706032;
+				uintptr_t get_current = 15705664;
 				uintptr_t get_fieldOfView = 15705968;
 				uintptr_t set_fieldOfView = 15708080;
 				uintptr_t get_allowHDR = 15705120;

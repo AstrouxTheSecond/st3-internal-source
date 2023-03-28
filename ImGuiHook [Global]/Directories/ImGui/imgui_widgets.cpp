@@ -1121,7 +1121,7 @@ bool ImGui::Checkbox(const char* label, bool* v)
     if (*v) {
 
         //reset canvas
-        window->DrawList->AddRectFilled(ImVec2(newRect.Min.x - 1.f, newRect.Min.y - 1.f), ImVec2(newRect.Max.x + .5f, newRect.Max.y + 1.f), ImColor(0, 155, 119), 10);
+        window->DrawList->AddRectFilled(ImVec2(newRect.Min.x - 1.f, newRect.Min.y - 1.f), ImVec2(newRect.Max.x + .5f, newRect.Max.y + 1.f), ImColor(199, 20, 0), 10);
 
         //create new rectangle for second half, third rect
         ImVec2 tUpperLeft(check_bb.GetCenter().x, check_bb.GetTL().y + 2.f);

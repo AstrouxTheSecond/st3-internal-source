@@ -28,11 +28,8 @@ namespace Hooks
 	void(__fastcall* Disconnect_org)(DWORD*);
 	void __stdcall Disconnect(DWORD* method);
 
-	bool(__fastcall* get_isMasterClient_org)(DWORD*); // PhotonNetwork$$get_isMasterClient
+	bool(__fastcall* get_isMasterClient_org)(DWORD*);
 	bool __stdcall get_isMasterClient(DWORD* method);
-
-	void(__fastcall* KickPlayerMaster_org)(DWORD*, DWORD*, DWORD*);
-	void __stdcall KickPlayerMaster(DWORD* __this, DWORD* player, DWORD* method);
 
 	float(__fastcall* get_fieldOfView_org)(DWORD*, DWORD*);
 	float __stdcall get_fieldOfView(DWORD* __this, DWORD* method);

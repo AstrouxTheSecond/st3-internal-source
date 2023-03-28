@@ -41,6 +41,30 @@ namespace Functions
 				return ((int32_t(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Time::get_frameCount))();
 			}
 		}
+		namespace QualitySettings
+		{
+			void SetQualityLevel(int32_t level)
+			{
+				((void(*)(bool))(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::RenderSettings::set_fog))(level);
+			}
+
+			int32_t GetQualityLevel()
+			{
+				return ((int32_t(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::QualitySettings::GetQualityLevel))();
+			}
+		}
+		namespace Camera
+		{
+			DWORD* get_main()
+			{
+				return ((DWORD*(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Camera::get_main))();
+			}
+
+			DWORD* get_current()
+			{
+				return ((DWORD*(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Camera::get_current))();
+			}
+		}
 		namespace RenderSettings 
 		{
 			void SetFog(bool value)
@@ -119,7 +143,12 @@ namespace Functions
 
 		DWORD* get_room()
 		{
-			return ((DWORD * (*)())(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::get_room))();
+			return ((DWORD*(*)())(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::get_room))();
+		}
+
+		int32_t* get_Server()
+		{
+			return ((int32_t*(*)())(ST3::Modules::GameAssembly + ST3::Offsets::PhotonNetwork::get_player))();
 		}
 
 		bool SetMasterClient(DWORD* PhotonPlayer_o)
