@@ -321,7 +321,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui_Initialised = true;
 		}
 	}
-	if (GetAsyncKeyState(VK_INSERT) & 1) ShowMenu = !ShowMenu;
+	if (GetAsyncKeyState(VK_INSERT) & 1 && Functions::UnityEngine::Application::GetLevelIndex() > 0) ShowMenu = !ShowMenu;
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -519,8 +519,15 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		}
 	}
 
-	if (Functions::UnityEngine::Application::GetLevelIndex() == 0)
-		draw_list->AddText(ImVec2(10, 8), ImColor(255, 255, 255, 255), "Cheat Loaded, Click 'Play'");
+	if (Functions::UnityEngine::Application::GetLevelIndex() == 0) \
+	{
+		draw_list->AddText(ImVec2(10, 8), ImColor(199, 0, 0, 255), "Inferno.cc Loaded - Click 'Play'");
+		draw_list->AddText(ImVec2(10, 20), ImColor(199, 0, 0, 255), "Note: The key to open the menu is 'Insert'");
+	}
+
+	if (Functions::UnityEngine::Application::GetLevelIndex() > 0)
+		if (!Functions::PhotonNetwork::get_inRoom() && switchTabs == 2) // make the tab revert if you disconnect from the room
+			switchTabs = 1;
 
 	if (Variables::Hacks::Timescale_type == 1)
 	{
@@ -533,8 +540,6 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	Functions::UnityEngine::RenderSettings::SetFog(!Variables::Hacks::FogDisabler);
 	Functions::UnityEngine::RenderSettings::SetAmbientMode(Variables::Hacks::AmbientMode);
 	//Functions::UnityEngine::Application::SetMaxFPS(10000);
-
-	ImGuiStyle* style = &ImGui::GetStyle();
 
 	ImGui::EndFrame();
 	ImGui::Render();
