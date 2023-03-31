@@ -129,9 +129,13 @@ namespace ST3
 		{
 			uintptr_t ForceOtherPlayers = 3533216; // crashes aswell /shrug
 		}
+		namespace PlayerDamage
+		{
+			uintptr_t DoDamage = 3182080; // PlayerDamage$$KOFOOHFOGHL
+		}
 		namespace FPSController
 		{
-			uintptr_t FPScontrollerMovement_TypeInfo = 36606312;
+			uintptr_t FPScontroller_FPScontrollerMovement_c = 36606312;
 			namespace FPScontrollerMovement
 			{
 				uintptr_t WalkSpeed = 0x1C;

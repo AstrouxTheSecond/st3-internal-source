@@ -54,12 +54,14 @@ namespace Variables
 		bool LoadLevelServerside = false;
 		bool ForceMaster = false;
 		char ScriptInput[1024]; // unused
+		char PlayerListStored[256];
 		int MaxPlayers = 6;
 		const char* Timescale_types[] = { "Button", "Mouse (Mouse4)" };
 		int Timescale_type = 0;
 		bool AntiDisconnect = false;
 		int32_t AmbientMode = 0;
 		int32_t QualityLevel = 0;
+		bool KeybindText = false;
 	}
 	namespace Fonts
 	{

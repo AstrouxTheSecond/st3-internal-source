@@ -66,7 +66,7 @@ void __stdcall Hooks::PhotonRPC(DWORD* __this, const char* methodName, int32_t t
 	char methodNameReadable[256];
 	wcstombs(methodNameReadable, (wchar_t*)methodName + 0xA, sizeof(methodNameReadable));
 
-	if (Variables::Hacks::RPCDisabler)
+	if (Variables::Hacks::RPCDisabler && GetAsyncKeyState(VK_XBUTTON1))
 		return;
 
 	if (Variables::Hacks::AttackDisabler)
@@ -74,10 +74,10 @@ void __stdcall Hooks::PhotonRPC(DWORD* __this, const char* methodName, int32_t t
 		//if (std::string("Attack").contains(methodNameReadable))
 			//return;
 
-		if (std::string("DLAAABADJJP").contains(methodNameReadable) && target == 1)
+		if (std::string("KOFOOHFOGHL").contains(methodNameReadable) && target == 1)
 			return;
 		
-		//if (std::string("JLOHDDECPCL").contains(methodNameReadable)) // RangedAttack Obfuscated 
+		//if (std::string("FJNHCPGAHEA").contains(methodNameReadable)) // RangedAttack Obfuscated 
 			//return;
 	}
 
@@ -169,7 +169,27 @@ void __stdcall Hooks::SetString(const char* key, const char* value, DWORD* metho
 	if (std::string("PlayerType0001").contains(setStringReadable)) // zeoworks player type
 		return Hooks::SetString_org(key, value, method);
 
+	if (std::string("PlayerNames").contains(setStringReadable)) // playerlist
+	{
+		Variables::Hacks::PlayerListStored == setStringReadable;
+		return Hooks::SetString_org(key, value, method);
+	}
+
 	return Hooks::SetString_org(key, value, method);
+}
+
+void __stdcall Hooks::GetString(const char* key, const char* defaultValue, DWORD* method)
+{
+	char getStringReadable[256];
+	wcstombs(getStringReadable, (wchar_t*)key + 0xA, sizeof(getStringReadable));
+
+	if (std::string("PlayerNames").contains(getStringReadable)) // playerlist
+	{
+		Variables::Hacks::PlayerListStored == getStringReadable;
+		return Hooks::GetString_org(key, defaultValue, method);
+	}
+
+	return Hooks::GetString_org(key, defaultValue, method);
 }
 
 bool __stdcall Hooks::get_isMasterClient(DWORD* method)
@@ -341,6 +361,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::Text("GetDeltaTime = %.1f", Functions::UnityEngine::Time::GetDeltaTime());
 		ImGui::Text("GetFrameCount = %i", Functions::UnityEngine::Time::GetFrameCount());
 		ImGui::Text("GetTimeSinceLevelLoad = %.1f", Functions::UnityEngine::Time::GetTimeSinceLevelLoad());
+		//ImGui::Text("Test = %.0f", *(float*)(ST3::Modules::GameAssembly + ST3::Offsets::FPSController::FPScontroller_FPScontrollerMovement_c + ST3::Offsets::FPSController::FPScontrollerMovement::gravity));
 		if (Functions::PhotonNetwork::get_inRoom())
 		{
 			ImGui::Separator();
@@ -371,6 +392,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui::SameLine();
 			if (ImGui::Button("Room Settings", ImVec2(150, 25)))
 				switchTabs = 2;
+			//ImGui::SameLine();
+			//if (ImGui::Button("Playerlist", ImVec2(150, 25)))
+			//	switchTabs = 3;
 		}
 
 		//ImGui::PopFont();
@@ -400,6 +424,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					ImGui::SliderInt("Circle Segments", &Variables::Hacks::Crosshair_segments, 1.f, 10.f);
 				else
 					ImGui::SliderInt("Square Rounding", &Variables::Hacks::Crosshair_rounding, 0.f, 12.f);
+				ImGui::Checkbox("Keybind Text", &Variables::Hacks::KeybindText);
 			}
 			break;
 		case 1:
@@ -440,23 +465,31 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				HelpMarker("11 = Blue Room");
 				if (ImGui::Button("Load Level"))
 				{
-					ShowMenu = false;
 					if (!Variables::Hacks::LoadLevelServerside)
 						Functions::UnityEngine::Application::LoadLevel(Variables::Hacks::LevelID);
 					else
 						Functions::PhotonPlayer::LoadLevel(Variables::Hacks::LevelID);
 				}
+				if (ImGui::Button("Reload Level"))
+				{
+					if (!Variables::Hacks::LoadLevelServerside)
+						Functions::UnityEngine::Application::LoadLevel(Functions::UnityEngine::Application::GetLevelIndex());
+					else
+						Functions::PhotonPlayer::LoadLevel(Functions::UnityEngine::Application::GetLevelIndex());
+				}
+				ImGui::SameLine();
+				HelpMarker("This fucks up survival, useful for trolling.");
 				ImGui::Checkbox("Load Via Photon", &Variables::Hacks::LoadLevelServerside);
 				ImGui::SameLine();
 				HelpMarker("Loads the level via Photon. (useless for now ig)");
-				if (ImGui::Button("Join Random Room (use on serverlist)"))
+				if (ImGui::Button("Join Random Room"))
 					Functions::PhotonNetwork::JoinRandomRoom();
+				ImGui::SameLine();
+				HelpMarker("Warning: use only on the serverlist or it crashes.");
 			}
 			if (ImGui::CollapsingHeader("Other"))
 			{
-				ImGui::Checkbox("Disable Photon RPC", &Variables::Hacks::RPCDisabler);
-				ImGui::SameLine();
-				HelpMarker("This only disables one of the RPC functions ill add them all later.");
+				ImGui::Checkbox("Disable Photon RPC (Mouse5)", &Variables::Hacks::RPCDisabler);
 				ImGui::Checkbox("Debug Menu", &Variables::Hacks::DebugMenu);
 				ImGui::Checkbox("Watermark", &Variables::Hacks::Watermark);
 				ImGui::SameLine();
@@ -492,6 +525,8 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				Functions::PhotonNetwork::CloseConnection(Functions::PhotonNetwork::get_player());
 			}
 			break;
+		case 3:
+			break;
 		}
 		//ImGui::PopFont();
 		ImGui::End();
@@ -519,14 +554,27 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		}
 	}
 
-	if (Functions::UnityEngine::Application::GetLevelIndex() == 0) \
+	if (Variables::Hacks::KeybindText)
+	{
+		if (Variables::Hacks::RPCDisabler && GetAsyncKeyState(VK_XBUTTON1))
+			draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 - 5), ImColor(0, 255, 0, 255), "DISABLE RPC");
+		else
+			draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 - 5), ImColor(255, 0, 0, 255), "DISABLE RPC");
+
+		if (Variables::Hacks::Timescale_type == 1 && GetAsyncKeyState(VK_XBUTTON2))
+			draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 + 10), ImColor(0, 255, 0, 255), "SPEEDHACK");
+		else
+			draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 + 10), ImColor(255, 0, 0, 255), "SPEEDHACK");
+	}
+
+	if (Functions::UnityEngine::Application::GetLevelIndex() == 0) 
 	{
 		draw_list->AddText(ImVec2(10, 8), ImColor(199, 0, 0, 255), "Inferno.cc Loaded - Click 'Play'");
 		draw_list->AddText(ImVec2(10, 20), ImColor(199, 0, 0, 255), "Note: The key to open the menu is 'Insert'");
 	}
 
 	if (Functions::UnityEngine::Application::GetLevelIndex() > 0)
-		if (!Functions::PhotonNetwork::get_inRoom() && switchTabs == 2) // make the tab revert if you disconnect from the room
+		if (!Functions::PhotonNetwork::get_inRoom() && switchTabs >= 2) // make the tab revert if you disconnect from the room
 			switchTabs = 1;
 
 	if (Variables::Hacks::Timescale_type == 1)
@@ -536,6 +584,8 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		else
 			Functions::UnityEngine::Time::SetTimescale(1.000f);
 	}
+
+	//*(float*)(ST3::Modules::GameAssembly + ST3::Offsets::FPSController::FPScontroller_FPScontrollerMovement_c + ST3::Offsets::FPSController::FPScontrollerMovement::gravity) = 0.f;
 
 	Functions::UnityEngine::RenderSettings::SetFog(!Variables::Hacks::FogDisabler);
 	Functions::UnityEngine::RenderSettings::SetAmbientMode(Variables::Hacks::AmbientMode);
@@ -608,6 +658,7 @@ DWORD WINAPI MainThread(LPVOID lpParameter)
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::CodeStage::SetInt), &Hooks::SetInt, (LPVOID*)&Hooks::SetInt_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::CodeStage::GetInt), &Hooks::GetInt, (LPVOID*)&Hooks::GetInt_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::CodeStage::SetString), &Hooks::SetString, (LPVOID*)&Hooks::SetString_org);
+	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::CodeStage::GetString), &Hooks::GetString, (LPVOID*)&Hooks::GetString_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Camera::get_fieldOfView), &Hooks::get_fieldOfView, (LPVOID*)&Hooks::get_fieldOfView_org);
 	MH_CreateHook(reinterpret_cast<LPVOID*>(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Application::LoadLevelAsync), &Hooks::LoadLevelAsync, (LPVOID*)&Hooks::LoadLevelAsync_org);
 

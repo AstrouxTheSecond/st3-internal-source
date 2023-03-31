@@ -46,6 +46,9 @@ namespace Hooks
 	void(__fastcall* SetString_org)(const char*, const char*, DWORD*);
 	void __stdcall SetString(const char* key, const char* value, DWORD* method);
 
+	void(__fastcall* GetString_org)(const char*, const char*, DWORD*);
+	void __stdcall GetString(const char* key, const char* defaultValue, DWORD* method);
+
 	DWORD* (__fastcall* LoadLevelAsync_org)(const wchar_t*, DWORD*);
 	DWORD* __stdcall LoadLevelAsync(const wchar_t* levelName, DWORD* method);
 }
