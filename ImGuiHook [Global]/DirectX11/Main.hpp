@@ -46,7 +46,7 @@ namespace Variables
 		int Crosshair_type = 0;
 		int Crosshair_segments = 100.f;
 		int Crosshair_rounding = 1.f;
-		int TimescaleAmount = 4.f;
+		int TimescaleAmount = 2.f;
 		int32_t LevelID = 1;
 		bool DebugMenu = false;
 		bool ServerRegionSpoofer = false;
@@ -56,12 +56,16 @@ namespace Variables
 		char ScriptInput[1024]; // unused
 		char PlayerListStored[256];
 		int MaxPlayers = 6;
-		const char* Timescale_types[] = { "Button", "Mouse (Mouse4)" };
+		const char* Timescale_types[] = { "Off", "Always On", "Mouse4", "Left Shift" };
+		const char* RPCDisabler_types[] = { "Off", "Always On", "Mouse5" };
 		int Timescale_type = 0;
+		int RPCDisabler_type = 0;
 		bool AntiDisconnect = false;
 		int32_t AmbientMode = 0;
 		int32_t QualityLevel = 0;
 		bool KeybindText = false;
+		bool ExperimentalMenuCursorSupport = false;
+		bool AutoCrash = false;
 	}
 	namespace Fonts
 	{

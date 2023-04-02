@@ -239,5 +239,12 @@ namespace ST3
 				uintptr_t set_targetFrameRate = 15688224;
 			}
 		}
+		namespace System
+		{
+			namespace String
+			{
+				uintptr_t CreateString = 12604640;
+			}
+		}
 	}
 }

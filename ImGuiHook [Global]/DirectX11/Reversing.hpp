@@ -5,10 +5,27 @@
 #include <wtypes.h>
 #include <cstdint>
 
+//typedef System_String_o* (*createString)(System_String_o* __this, int8_t* value, int32_t startIndex, int32_t length);
+//LPVOID createStringAddress = reinterpret_cast<LPVOID>(ST3::Modules::GameAssembly + ST3::Offsets::System::String::CreateString);
+//createString CreateString = (createString)createStringAddress;
+//System_String_o* sysstr = CreateString(NULL, (int8_t*)"4", 0, strlen("4"));
+
 namespace Functions
 {
 	namespace UnityEngine 
 	{
+		namespace Screen 
+		{
+			void SetLockCursor(bool locked)
+			{
+				((void(*)(bool))(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Screen::set_lockCursor))(locked);
+			}
+
+			bool GetLockCursor()
+			{
+				return ((bool(*)())(ST3::Modules::GameAssembly + ST3::Offsets::UnityEngine::Screen::get_lockCursor))();
+			}
+		}
 		namespace Time 
 		{
 			float GetTime()

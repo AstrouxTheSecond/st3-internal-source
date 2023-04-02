@@ -66,7 +66,12 @@ void __stdcall Hooks::PhotonRPC(DWORD* __this, const char* methodName, int32_t t
 	char methodNameReadable[256];
 	wcstombs(methodNameReadable, (wchar_t*)methodName + 0xA, sizeof(methodNameReadable));
 
-	if (Variables::Hacks::RPCDisabler && GetAsyncKeyState(VK_XBUTTON1))
+	if (Variables::Hacks::RPCDisabler_type == 2)
+	{
+		if (GetAsyncKeyState(VK_XBUTTON1))
+			return;
+	}
+	else if (Variables::Hacks::RPCDisabler_type == 1)
 		return;
 
 	if (Variables::Hacks::AttackDisabler)
@@ -170,10 +175,7 @@ void __stdcall Hooks::SetString(const char* key, const char* value, DWORD* metho
 		return Hooks::SetString_org(key, value, method);
 
 	if (std::string("PlayerNames").contains(setStringReadable)) // playerlist
-	{
-		Variables::Hacks::PlayerListStored == setStringReadable;
 		return Hooks::SetString_org(key, value, method);
-	}
 
 	return Hooks::SetString_org(key, value, method);
 }
@@ -184,10 +186,7 @@ void __stdcall Hooks::GetString(const char* key, const char* defaultValue, DWORD
 	wcstombs(getStringReadable, (wchar_t*)key + 0xA, sizeof(getStringReadable));
 
 	if (std::string("PlayerNames").contains(getStringReadable)) // playerlist
-	{
-		Variables::Hacks::PlayerListStored == getStringReadable;
 		return Hooks::GetString_org(key, defaultValue, method);
-	}
 
 	return Hooks::GetString_org(key, defaultValue, method);
 }
@@ -448,17 +447,12 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::Checkbox("Server Region Spoofer", &Variables::Hacks::ServerRegionSpoofer);
 				ImGui::SameLine();
 				HelpMarker("Spoofs the server region.");
-				if (Variables::Hacks::ServerRegionSpoofer)       // it might of been the server bug that made me think it was patched /shrug
-				{
+				if (Variables::Hacks::ServerRegionSpoofer) // it might of been the server bug that made me think it was patched /shrug
 					ImGui::SliderInt("Region", &Variables::Hacks::ServerRegion, 0, 10);
-				} 
 				ImGui::Separator();
 				//ImGui::SliderFloat("Timescale Amount", &Variables::Hacks::TimescaleAmount, 0.f, 20.f);
-				ImGui::SliderInt("Timescale Amount", &Variables::Hacks::TimescaleAmount, 0.f, 20.f);
-				ImGui::Combo("Timescale Type", &Variables::Hacks::Timescale_type, Variables::Hacks::Timescale_types, IM_ARRAYSIZE(Variables::Hacks::Timescale_types));
-				if (Variables::Hacks::Timescale_type == 0)
-					if (ImGui::Button("Set Timescale"))
-						Functions::UnityEngine::Time::SetTimescale(Variables::Hacks::TimescaleAmount);
+				ImGui::Combo("Speedhack", &Variables::Hacks::Timescale_type, Variables::Hacks::Timescale_types, IM_ARRAYSIZE(Variables::Hacks::Timescale_types));
+				ImGui::SliderInt("Speedhack Amount", &Variables::Hacks::TimescaleAmount, 1.f, 20.f);
 				ImGui::Separator();
 				ImGui::SliderInt("Level ID", &Variables::Hacks::LevelID, 0, 42);
 				ImGui::SameLine();
@@ -482,18 +476,23 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::Checkbox("Load Via Photon", &Variables::Hacks::LoadLevelServerside);
 				ImGui::SameLine();
 				HelpMarker("Loads the level via Photon. (useless for now ig)");
+				ImGui::Separator();
 				if (ImGui::Button("Join Random Room"))
 					Functions::PhotonNetwork::JoinRandomRoom();
 				ImGui::SameLine();
 				HelpMarker("Warning: use only on the serverlist or it crashes.");
+				ImGui::Checkbox("Auto-Room-Crasher", &Variables::Hacks::AutoCrash);
+				ImGui::SameLine();
+				HelpMarker("Automatically crashes a room. (can crash)");
 			}
 			if (ImGui::CollapsingHeader("Other"))
 			{
-				ImGui::Checkbox("Disable Photon RPC (Mouse5)", &Variables::Hacks::RPCDisabler);
+				ImGui::Combo("RPC Disabler", &Variables::Hacks::RPCDisabler_type, Variables::Hacks::RPCDisabler_types, IM_ARRAYSIZE(Variables::Hacks::RPCDisabler_types));
 				ImGui::Checkbox("Debug Menu", &Variables::Hacks::DebugMenu);
 				ImGui::Checkbox("Watermark", &Variables::Hacks::Watermark);
 				ImGui::SameLine();
 				ImGui::ColorEdit4("Watermark Color##1", (float*)&Variables::Hacks::Watermark_color);
+				ImGui::Checkbox("Experimental Menu Cursor Support (buggy)", &Variables::Hacks::ExperimentalMenuCursorSupport);
 			}
 			if (ImGui::CollapsingHeader("Credits"))
 			{
@@ -556,18 +555,38 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 
 	if (Variables::Hacks::KeybindText)
 	{
-		if (Variables::Hacks::RPCDisabler && GetAsyncKeyState(VK_XBUTTON1))
-			draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 - 5), ImColor(0, 255, 0, 255), "DISABLE RPC");
-		else
-			draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 - 5), ImColor(255, 0, 0, 255), "DISABLE RPC");
-
-		if (Variables::Hacks::Timescale_type == 1 && GetAsyncKeyState(VK_XBUTTON2))
-			draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 + 10), ImColor(0, 255, 0, 255), "SPEEDHACK");
-		else
-			draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 + 10), ImColor(255, 0, 0, 255), "SPEEDHACK");
+		if (Variables::Hacks::RPCDisabler_type == 2)
+		{
+			if (GetAsyncKeyState(VK_XBUTTON1))
+				draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 - 5), ImColor(0, 255, 0, 255), "DISABLE RPC (Keybind)");
+			else
+				draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 - 5), ImColor(255, 0, 0, 255), "DISABLE RPC (Keybind)");
+		}
+		else if (Variables::Hacks::RPCDisabler_type == 1)
+		{
+			draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 - 5), ImColor(0, 255, 0, 255), "DISABLE RPC (Always On)");
+		}
+		if (Variables::Hacks::Timescale_type == 3)
+		{
+			if (GetAsyncKeyState(VK_LSHIFT))
+				draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 + 10), ImColor(0, 255, 0, 255), "SPEEDHACK (Keybind)");
+			else
+				draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 + 10), ImColor(255, 0, 0, 255), "SPEEDHACK (Keybind)");
+		}
+		if (Variables::Hacks::Timescale_type == 2)
+		{
+			if (GetAsyncKeyState(VK_XBUTTON2))
+				draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 + 10), ImColor(0, 255, 0, 255), "SPEEDHACK (Keybind)");
+			else
+				draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 + 10), ImColor(255, 0, 0, 255), "SPEEDHACK (Keybind)");
+		}
+		else if (Variables::Hacks::Timescale_type == 1)
+		{
+			draw_list->AddText(ImVec2(Process::WindowWidth / 2 + 30, Process::WindowHeight / 2 + 10), ImColor(0, 255, 0, 255), "SPEEDHACK (Always On)");
+		}
 	}
 
-	if (Functions::UnityEngine::Application::GetLevelIndex() == 0) 
+	if (Functions::UnityEngine::Application::GetLevelIndex() == 0)
 	{
 		draw_list->AddText(ImVec2(10, 8), ImColor(199, 0, 0, 255), "Inferno.cc Loaded - Click 'Play'");
 		draw_list->AddText(ImVec2(10, 20), ImColor(199, 0, 0, 255), "Note: The key to open the menu is 'Insert'");
@@ -577,15 +596,40 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		if (!Functions::PhotonNetwork::get_inRoom() && switchTabs >= 2) // make the tab revert if you disconnect from the room
 			switchTabs = 1;
 
-	if (Variables::Hacks::Timescale_type == 1)
+	if (Variables::Hacks::AutoCrash && Functions::PhotonNetwork::get_inRoom() && Functions::UnityEngine::Time::GetTimeSinceLevelLoad() > 5.f) // we need the time since load check to prevent game crashes (in theory)
+	{
+		draw_list->AddText(ImVec2(Process::WindowWidth / 2 - 55, Process::WindowHeight / 2 - 50), ImColor(255, 255, 255, 255), "CRASHING SERVER...");
+		Variables::Hacks::AntiDisconnect = false;
+		Functions::PhotonNetwork::SetMasterClient(Functions::PhotonNetwork::get_player());
+	}
+
+	if (Variables::Hacks::Timescale_type == 3)
+	{
+		if (GetAsyncKeyState(VK_LSHIFT))
+			Functions::UnityEngine::Time::SetTimescale(Variables::Hacks::TimescaleAmount);
+		else
+			Functions::UnityEngine::Time::SetTimescale(1.000f);
+	}
+	else if (Variables::Hacks::Timescale_type == 2)
 	{
 		if (GetAsyncKeyState(VK_XBUTTON2))
 			Functions::UnityEngine::Time::SetTimescale(Variables::Hacks::TimescaleAmount);
 		else
 			Functions::UnityEngine::Time::SetTimescale(1.000f);
 	}
+	else if (Variables::Hacks::Timescale_type == 1)
+	{
+		Functions::UnityEngine::Time::SetTimescale(Variables::Hacks::TimescaleAmount);
+	}
+	else
+	{
+		Functions::UnityEngine::Time::SetTimescale(1.000f);
+	}
 
 	//*(float*)(ST3::Modules::GameAssembly + ST3::Offsets::FPSController::FPScontroller_FPScontrollerMovement_c + ST3::Offsets::FPSController::FPScontrollerMovement::gravity) = 0.f;
+
+	if (Variables::Hacks::ExperimentalMenuCursorSupport)
+		Functions::UnityEngine::Screen::SetLockCursor(ShowMenu);
 
 	Functions::UnityEngine::RenderSettings::SetFog(!Variables::Hacks::FogDisabler);
 	Functions::UnityEngine::RenderSettings::SetAmbientMode(Variables::Hacks::AmbientMode);
