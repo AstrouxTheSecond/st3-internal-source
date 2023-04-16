@@ -27,6 +27,7 @@ namespace ST3
 		}
 		namespace PhotonNetwork
 		{
+			uintptr_t PhotonNetwork_c = 36621760;
 			uintptr_t Disconnect = 10293392;
 			uintptr_t CreateRoom = 10291952;
 			uintptr_t get_player = 10323696;
@@ -48,6 +49,11 @@ namespace ST3
 			uintptr_t DestroyAll = 10292064;
 			uintptr_t DestroyPlayerObjects = 10292672;
 			uintptr_t RemoveRPCs = 10310144;
+			namespace Fields
+			{
+				uintptr_t networkingPeer = 16; // 0x10
+				uintptr_t PhotonServerSettings = 32; // 0x20
+			}
 		}
 		namespace PhotonView
 		{

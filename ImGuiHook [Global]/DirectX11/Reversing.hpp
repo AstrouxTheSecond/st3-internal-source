@@ -5,13 +5,13 @@
 #include <wtypes.h>
 #include <cstdint>
 
-//typedef System_String_o* (*createString)(System_String_o* __this, int8_t* value, int32_t startIndex, int32_t length);
-//LPVOID createStringAddress = reinterpret_cast<LPVOID>(ST3::Modules::GameAssembly + ST3::Offsets::System::String::CreateString);
-//createString CreateString = (createString)createStringAddress;
-//System_String_o* sysstr = CreateString(NULL, (int8_t*)"4", 0, strlen("4"));
-
 namespace Functions
 {
+	typedef System_String_o* (*createString)(System_String_o* __this, int8_t* value, int32_t startIndex, int32_t length);
+	LPVOID createStringAddress = reinterpret_cast<LPVOID>(ST3::Modules::GameAssembly + ST3::Offsets::System::String::CreateString);
+	createString CreateString = (createString)createStringAddress;
+	System_String_o* sysstr = CreateString(NULL, (int8_t*)"4", 0, strlen("4"));
+
 	namespace UnityEngine 
 	{
 		namespace Screen 

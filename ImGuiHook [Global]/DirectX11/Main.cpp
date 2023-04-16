@@ -626,7 +626,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		Functions::UnityEngine::Time::SetTimescale(1.000f);
 	}
 
-	//*(float*)(ST3::Modules::GameAssembly + ST3::Offsets::FPSController::FPScontroller_FPScontrollerMovement_c + ST3::Offsets::FPSController::FPScontrollerMovement::gravity) = 0.f;
+	*(float*)(ST3::Offsets::FPSController::FPScontroller_FPScontrollerMovement_c + 0x5C + ST3::Offsets::FPSController::FPScontrollerMovement::gravity) = 0.f;
 
 	if (Variables::Hacks::ExperimentalMenuCursorSupport)
 		Functions::UnityEngine::Screen::SetLockCursor(ShowMenu);
