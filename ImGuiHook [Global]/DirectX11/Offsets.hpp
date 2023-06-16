@@ -1,6 +1,6 @@
 #pragma once
 
-// V2.46
+// V2.48
 
 namespace ST3
 {
@@ -15,117 +15,112 @@ namespace ST3
 	{
 		namespace AntiCheat
 		{
-			uintptr_t CheckCheatEngine = 22763136;
-			uintptr_t OnSpeedhackDetected = 22763328;
-			uintptr_t OnInjectionDetected = 22763168;
-			uintptr_t OnObscuredCheatingDetected = 22763248;
-			uintptr_t OnLevelWasLoaded = 22763136;
+			uintptr_t CheckCheatEngine = 27124272;
+			uintptr_t OnSpeedhackDetected = 27124464;
+			uintptr_t OnInjectionDetected = 27124304;
+			uintptr_t OnObscuredCheatingDetected = 27124384;
+			uintptr_t OnLevelWasLoaded = 27124272;
 		}
 		namespace KickButton
 		{
-			uintptr_t SendKick = 20001088; // idfk /shrug
+			uintptr_t SendKick = 23118320; // idfk /shrug
 		}
 		namespace PhotonNetwork
 		{
-			uintptr_t PhotonNetwork_c = 36621760;
-			uintptr_t Disconnect = 10293392;
-			uintptr_t CreateRoom = 10291952;
-			uintptr_t get_player = 10323696;
-			uintptr_t get_room = 10323856;
-			uintptr_t get_masterClient = 10322656;
-			uintptr_t get_playerList = 10323408;
-			uintptr_t GetRoomList = 10295184;
-			uintptr_t GetPing = 10295072;
-			uintptr_t get_isMasterClient = 10321968;
-			uintptr_t get_inRoom = 10321776;
-			uintptr_t JoinRandomRoom = 10298192;
-			uintptr_t LeaveRoom = 10299296;
-			uintptr_t LeaveLobby = 10299088;
-			uintptr_t CloseConnection = 10285344;
-			uintptr_t SetMasterClient = 10311280;
-			uintptr_t get_ServerAddress = 10318416;
-			uintptr_t get_gameVersion = 10321680;
-			uintptr_t get_Server = 10319024;
-			uintptr_t DestroyAll = 10292064;
-			uintptr_t DestroyPlayerObjects = 10292672;
+			uintptr_t Disconnect = 10225296;
+			uintptr_t CreateRoom = 10223856;
+			uintptr_t get_player = 10255600;
+			uintptr_t get_room = 10255760;
+			uintptr_t get_masterClient = 10254560;
+			uintptr_t get_playerList = 10255312;
+			uintptr_t GetRoomList = 10227088;
+			uintptr_t GetPing = 10226976;
+			uintptr_t get_isMasterClient = 10253872;
+			uintptr_t get_inRoom = 10253680;
+			uintptr_t JoinRandomRoom = 10230096;
+			uintptr_t LeaveRoom = 10231200;
+			uintptr_t LeaveLobby = 10230992;
+			uintptr_t CloseConnection = 10217248;
+			uintptr_t SetMasterClient = 10243184;
+			uintptr_t get_ServerAddress = 10250320;
+			uintptr_t get_gameVersion = 10253584;
+			uintptr_t get_Server = 10250928;
+			uintptr_t DestroyAll = 10223968;
+			uintptr_t DestroyPlayerObjects = 10224576;
 			uintptr_t RemoveRPCs = 10310144;
-			namespace Fields
-			{
-				uintptr_t networkingPeer = 16; // 0x10
-				uintptr_t PhotonServerSettings = 32; // 0x20
-			}
 		}
 		namespace PhotonView
 		{
-			uintptr_t get_viewID = 10365568;
-			uintptr_t set_viewID = 10365584;
-			uintptr_t get_isSceneView = 10365264;
-			uintptr_t get_owner = 10365376;
-			uintptr_t get_OwnerActorNr = 3374832;
-			uintptr_t get_isOwnerActive = 10365120;
-			uintptr_t get_CreatorActorNr = 10364576;
-			uintptr_t get_isMine = 10364816;
-			uintptr_t RPC = 10360848;
-			uintptr_t RPCSecure = 10361328;
-			uintptr_t PlayerRPC = 10360704;
-			uintptr_t PlayerRPCSecure = 10361184;
-			uintptr_t OnMasterClientSwitched = 10360528;
-			uintptr_t SerializeView = 10363056;
+			uintptr_t get_viewID = 6801856;
+			uintptr_t set_viewID = 10297504;
+			uintptr_t get_isSceneView = 10297200;
+			uintptr_t get_owner = 10297312;
+			uintptr_t get_OwnerActorNr = 4937792;
+			uintptr_t get_isOwnerActive = 10297056;
+			uintptr_t get_CreatorActorNr = 10296512;
+			uintptr_t get_isMine = 10296752;
+			uintptr_t RPC = 10292784;
+			uintptr_t RPCSecure = 10293264;
+			uintptr_t PlayerRPC = 10292640;
+			uintptr_t PlayerRPCSecure = 10293120;
+			uintptr_t OnMasterClientSwitched = 10292464;
+			uintptr_t SerializeView = 10294992;
 		}
 		namespace PhotonPlayer
 		{
-			uintptr_t get_ID = 3374752;
-			uintptr_t get_NickName = 2144016;
-			uintptr_t set_NickName = 10334048;
-			uintptr_t get_UserId = 2952864;
-			uintptr_t set_UserId = 2952656;
-			uintptr_t get_isMasterClient = 10333888;
-			uintptr_t get_isLocal = 3392208;
-			uintptr_t LoadLevel = 10299824;
-			uintptr_t WebRpc = 10315168;
+			uintptr_t get_ID = 3050656;
+			uintptr_t get_NickName = 2350160;
+			uintptr_t set_NickName = 10265952;
+			uintptr_t get_UserId = 3211216;
+			uintptr_t set_UserId = 3212288;
+			uintptr_t get_isMasterClient = 10265920;
+			uintptr_t get_isLocal = 4955072;
+			uintptr_t LoadLevel = 10231728;
+			uintptr_t WebRpc = 10247072;
 		}
 		namespace Room
 		{
-			uintptr_t get_open = 5501072;
-			uintptr_t set_open = 28811840;
-			uintptr_t get_visible = 8637456;
-			uintptr_t set_visible = 28811856;
-			uintptr_t get_maxPlayers = 4031568;
-			uintptr_t set_maxPlayers = 28811824;
-			uintptr_t get_playerCount = 28810208;
-			uintptr_t get_masterClientId = 7556720;
-			uintptr_t set_masterClientId = 7556736;
+			uintptr_t get_open = 6501792;
+			uintptr_t set_open = 28306128;
+			uintptr_t get_visible = 680680;
+			uintptr_t set_visible = 28306144;
+			uintptr_t get_maxPlayers = 3051696;
+			uintptr_t set_maxPlayers = 28306112;
+			uintptr_t get_playerCount = 28304496;
+			uintptr_t get_masterClientId = 8159664;
+			uintptr_t set_masterClientId = 8159680;
 		}
 		namespace RoomInfo
 		{
-			uintptr_t get_serverSideMasterClient = 9720976;
-			uintptr_t set_serverSideMasterClient = 9721216;
-			uintptr_t get_PlayerCount = 6623552;
-			uintptr_t set_PlayerCount = 5938672;
+			uintptr_t get_serverSideMasterClient = 3050688;
+			uintptr_t set_serverSideMasterClient = 3051232;
+			uintptr_t get_PlayerCount = 3210784;
+			uintptr_t set_PlayerCount = 3211792;
 		}
 		namespace RoomMultiplayerMenu
 		{
-			uintptr_t OnMasterClientSwitched = 4748800;
-			uintptr_t KickPlayerMaster = 4691168;  // kick function - not even sure if this is the func lol
-			uintptr_t RespawnPlayer2 = 4753968;
-			uintptr_t SpawnPlayer = 4754544;
-			uintptr_t LeaveRoom2 = 4703216;
+			uintptr_t OnMasterClientSwitched = 4857984;
+			uintptr_t KickPlayerMaster = 4802832;  // kick function - not even sure if this is the func lol
+			uintptr_t RespawnPlayer2 = 4869152;
+			uintptr_t SpawnPlayer = 4869728;
+			uintptr_t LeaveRoom2 = 4821568;
 		}
 		namespace CodeStage
 		{
-			uintptr_t SetInt = 28697632;
-			uintptr_t SetBool = 28695904;
-			uintptr_t SetFloat = 28697376;
-			uintptr_t SetString = 28699408;
-			uintptr_t GetInt = 28685552;
-			uintptr_t GetBool = 28681872;
-			uintptr_t GetFloat = 28685040;
-			uintptr_t GetString = 28688400;
+			uintptr_t SetInt = 28241184;
+			uintptr_t SetBool = 28239456;
+			uintptr_t SetFloat = 28240928;
+			uintptr_t SetString = 28242960;
+			uintptr_t GetInt = 28229104;
+			uintptr_t GetBool = 28225424;
+			uintptr_t GetFloat = 28228592
+			uintptr_t GetString = 28231952;
 		}
 		namespace PlayerDamage
 		{
-			uintptr_t Awake = 3179664;
-			uintptr_t Update = 3193568;
+			uintptr_t Awake = 11040512;
+			uintptr_t Update = 11064656;
+			uintptr_t DoDamage = 11055872;
 		}
 		namespace ShopSystem
 		{
@@ -133,116 +128,98 @@ namespace ST3
 		}
 		namespace Volume
 		{
-			uintptr_t ForceOtherPlayers = 3533216; // crashes aswell /shrug
-		}
-		namespace PlayerDamage
-		{
-			uintptr_t DoDamage = 3182080; // PlayerDamage$$KOFOOHFOGHL
-		}
-		namespace FPSController
-		{
-			uintptr_t FPScontroller_FPScontrollerMovement_c = 36606312;
-			namespace FPScontrollerMovement
-			{
-				uintptr_t WalkSpeed = 0x1C;
-				uintptr_t RunSpeed = 0x20;
-				uintptr_t canCrouch = 0x24;
-				uintptr_t CrouchSpeed = 0x28;
-				uintptr_t crouchHeight = 0x2C;
-				uintptr_t gravity = 0x50;
-				uintptr_t enableGravity = 0x58;
-			}
+			uintptr_t ForceOtherPlayers = 11623968; // crashes aswell /shrug
 		}
 		namespace WeaponAnimation
 		{
-			uintptr_t Update = 24924528;
+			uintptr_t Update = 22585280;
 		}
 		namespace WeaponCrosshair
 		{
-			uintptr_t Update = 25002816;
+			uintptr_t Update = 7822416;
 		}
 		namespace WeaponSync
 		{
-			uintptr_t syncShotgun = 23608496;
+			uintptr_t syncShotgun = 6035472;
 		}
 		namespace UnityEngine
 		{
 			namespace Screen
 			{
-				uintptr_t get_width = 15504912;
-				uintptr_t get_height = 15504784;
-				uintptr_t get_dpi = 15504688;
-				uintptr_t get_fullScreenMode = 15504736;
-				uintptr_t set_fullScreenMode = 15504960;
-				uintptr_t SetResolution = 15504464;
-				uintptr_t get_lockCursor = 15504832;
-				uintptr_t set_lockCursor = 15505024;
+				uintptr_t get_width = 14679616;
+				uintptr_t get_height = 14679488;
+				uintptr_t get_dpi = 14679392;
+				uintptr_t get_fullScreenMode = 14679440;
+				uintptr_t set_fullScreenMode = 14679664;
+				uintptr_t SetResolution = 14679168;
+				uintptr_t get_lockCursor = 14679536;
+				uintptr_t set_lockCursor = 14679728;
 			}
 			namespace QualitySettings
 			{
-				uintptr_t GetQualityLevel = 15646880;
-				uintptr_t SetQualityLevel = 15646928;
-				uintptr_t set_shadowDistance = 15647648;
-				uintptr_t get_anisotropicFiltering = 15647104;
-				uintptr_t set_anisotropicFiltering = 15647392;
+				uintptr_t GetQualityLevel = 14821632;
+				uintptr_t SetQualityLevel = 14821744;
+				uintptr_t set_shadowDistance = 14822400;
+				uintptr_t get_anisotropicFiltering = 14821856;
+				uintptr_t set_anisotropicFiltering = 14822144;
 			}
 			namespace RenderSettings
 			{
-				uintptr_t set_fog = 15671808;
-				uintptr_t get_fog = 15671376;
-				uintptr_t get_fogStartDistance = 15671328;
-				uintptr_t get_fogEndDistance = 15671232;
-				uintptr_t get_fogMode = 15671280;
-				uintptr_t get_fogColor = 15671120;
-				uintptr_t set_fogColor = 15671680;
+				uintptr_t set_fog = 14846560;
+				uintptr_t get_fog = 14846128;
+				uintptr_t get_fogStartDistance = 14846080;
+				uintptr_t get_fogEndDistance = 14845984;
+				uintptr_t get_fogMode = 14846032;
+				uintptr_t get_fogColor = 14845872;
+				uintptr_t set_fogColor = 14846432;
 				uintptr_t set_fogColorInjected = 15671056;
-				uintptr_t get_fogDensity = 15671184;
-				uintptr_t set_fogDensity = 15671744;
-				uintptr_t get_ambientMode = 15670880;
-				uintptr_t set_ambientMode = 15671424;
+				uintptr_t get_fogDensity = 14845936;
+				uintptr_t set_fogDensity = 14846496;
+				uintptr_t get_ambientMode = 14845632;
+				uintptr_t set_ambientMode = 14846176;
 			}
 			namespace Camera
 			{
-				uintptr_t get_main = 15706032;
-				uintptr_t get_current = 15705664;
-				uintptr_t get_fieldOfView = 15705968;
-				uintptr_t set_fieldOfView = 15708080;
-				uintptr_t get_allowHDR = 15705120;
-				uintptr_t set_allowHDR = 15707264;
-				uintptr_t get_depth = 15705776;
-				uintptr_t set_depth = 15707920;
-				uintptr_t get_aspect = 15705248;
-				uintptr_t set_aspect = 15707424;
-				uintptr_t get_cameraType = 15705472;
-				uintptr_t set_cameraType = 15707664;
+				uintptr_t get_main = 14880784;
+				uintptr_t get_current = 14880416;
+				uintptr_t get_fieldOfView = 14880720;
+				uintptr_t set_fieldOfView = 14882832;
+				uintptr_t get_allowHDR = 14879872;
+				uintptr_t set_allowHDR = 14882016;
+				uintptr_t get_depth = 14880528;
+				uintptr_t set_depth = 14882672;
+				uintptr_t get_aspect = 14880000;
+				uintptr_t set_aspect = 14882176;
+				uintptr_t get_cameraType = 14880224;
+				uintptr_t set_cameraType = 14882416;
 			}
 			namespace Time
 			{
-				uintptr_t get_time = 15535952;
-				uintptr_t get_timeSinceLevelLoad = 15535904;
-				uintptr_t get_deltaTime = 15535616;
-				uintptr_t get_timeScale = 15535856;
-				uintptr_t set_timeScale = 15536160;
-				uintptr_t get_frameCount = 15535712;
+				uintptr_t get_time = 14710640;
+				uintptr_t get_timeSinceLevelLoad = 14710592;
+				uintptr_t get_deltaTime = 14710304;
+				uintptr_t get_timeScale = 14710544;
+				uintptr_t set_timeScale = 14710848;
+				uintptr_t get_frameCount = 14710400;
 			}
 			namespace SystemInfo
 			{
-				uintptr_t get_deviceUniqueIdentifier = 15521024; // used for hwid shit which is not used in st3 /shrug
+				uintptr_t get_deviceUniqueIdentifier = 14695712; // used for hwid shit which is not used in st3 /shrug
 			}
 			namespace Object
 			{
-				uintptr_t Destroy = 15621504;
+				uintptr_t Destroy = 14796256;
 			}
 			namespace Application
 			{
-				uintptr_t Quit = 15686960;
-				uintptr_t LoadLevel = 15686640;
-				uintptr_t LoadLevelName = 15686736;
-				uintptr_t LoadLevelAsync = 15686544;
-				uintptr_t get_loadedLevel = 15687632;
-				uintptr_t get_loadedLevelName = 15687536;
-				uintptr_t get_targetFrameRate = 15687824;
-				uintptr_t set_targetFrameRate = 15688224;
+				uintptr_t Quit = 14861648;
+				uintptr_t LoadLevel = 14861392;
+				uintptr_t LoadLevelName = 14861488;
+				uintptr_t LoadLevelAsync = 14861296;
+				uintptr_t get_loadedLevel = 14862384;
+				uintptr_t get_loadedLevelName = 14862288;
+				uintptr_t get_targetFrameRate = 14862576;
+				uintptr_t set_targetFrameRate = 14862976;
 			}
 		}
 		namespace System
