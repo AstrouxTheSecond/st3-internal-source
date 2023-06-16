@@ -47,7 +47,7 @@ namespace ST3
 			uintptr_t get_Server = 10250928;
 			uintptr_t DestroyAll = 10223968;
 			uintptr_t DestroyPlayerObjects = 10224576;
-			uintptr_t RemoveRPCs = 10310144;
+			uintptr_t RemoveRPCs = 10242048;
 			uintptr_t LoadLevel = 10231728;
 			uintptr_t WebRpc = 10247072;
 		}
@@ -226,7 +226,7 @@ namespace ST3
 		{
 			namespace String
 			{
-				uintptr_t CreateString = 12604640;
+				uintptr_t CreateString = 12387152;
 			}
 		}
 	}
