@@ -48,6 +48,8 @@ namespace ST3
 			uintptr_t DestroyAll = 10223968;
 			uintptr_t DestroyPlayerObjects = 10224576;
 			uintptr_t RemoveRPCs = 10310144;
+			uintptr_t LoadLevel = 10231728;
+			uintptr_t WebRpc = 10247072;
 		}
 		namespace PhotonView
 		{
@@ -75,8 +77,6 @@ namespace ST3
 			uintptr_t set_UserId = 3212288;
 			uintptr_t get_isMasterClient = 10265920;
 			uintptr_t get_isLocal = 4955072;
-			uintptr_t LoadLevel = 10231728;
-			uintptr_t WebRpc = 10247072;
 		}
 		namespace Room
 		{
