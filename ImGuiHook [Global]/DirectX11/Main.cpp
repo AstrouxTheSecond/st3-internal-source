@@ -462,14 +462,14 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					if (!Variables::Hacks::LoadLevelServerside)
 						Functions::UnityEngine::Application::LoadLevel(Variables::Hacks::LevelID);
 					else
-						Functions::PhotonPlayer::LoadLevel(Variables::Hacks::LevelID);
+						Functions::PhotonNetwork::LoadLevel(Variables::Hacks::LevelID);
 				}
 				if (ImGui::Button("Reload Level"))
 				{
 					if (!Variables::Hacks::LoadLevelServerside)
 						Functions::UnityEngine::Application::LoadLevel(Functions::UnityEngine::Application::GetLevelIndex());
 					else
-						Functions::PhotonPlayer::LoadLevel(Functions::UnityEngine::Application::GetLevelIndex());
+						Functions::PhotonNetwork::LoadLevel(Functions::UnityEngine::Application::GetLevelIndex());
 				}
 				ImGui::SameLine();
 				HelpMarker("This fucks up survival, useful for trolling.");
